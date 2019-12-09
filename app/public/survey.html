@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Friend Finder: Survey</title>
+
+    <!-- CSS and JavaScript -->
+   
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>Ready to meet the perfect match?</h1>
+    <!-- how to take this POST and push it into an object...? -->
+    <form action="" method="POST">
+        <p>What is your name?</p>
+            <input placeholder="Name" name="username" type="text" id="username">
+        </p>
+        <p>What is your age?</p>
+            <input placeholder="Age" name="age" type="text" id="age">
+        <div class='question'></div>
+        <div class='choices'></div>
+        <a href="" class="button" class="submit">Submit Survey</a>
+    </form>
+
+    <script type="text/javascript">
+        const surveyQuestions = [
+            {
+                question: `Question 1: Your human says, "Let's Go For A Ride." In a perfect world, where are you headed?`,
+                options: [` `,
+                    `The dog park to play with friends`,
+                    `The pet store! I want to see the latest treats and toys.`,
+                    `I've been needing a spa day. Let's go to the groomers.`,
+                    `I need to stretch my legs! Let's go hiking!`,
+                    `Suprise me! I like adventures.`
+                ]
+            },
+            {
+                question: `Question 2: The human has left! What do you do first?`,
+                options: [` `,
+                    `Get cozy on the bed or sofa. Wherever I'm not supposed to lay.`,
+                    `Pout by the door. Maybe if they hear my cries they'll return...`,
+                    `Head to my bed and sleep. When I wake up, they'll be back.`,
+                    `Patrol the perimeter! It's my duty to bark at any potential threats.`,
+                    `Being alone makes me nervous. Is there anthing to chew on?`
+                ]
+            },
+            {
+                question: `Question 3: Treat time! What's your favorite food?`,
+                options: [` `,
+                    `I prefer the finer things in life. Steak.`,
+                    `Peanut butter in a kong. I like a challenge.`,
+                    `Quick, easy and delicious! Hotdogs!`,
+                    `I'll take whatever, even if it came from the trashcan.`,
+                    `I'm independent. I'd prefer to catch it myself.`
+                ]
+            },
+            {
+                question: `Question 4: What's the scariest noise?`,
+                options: [` `,
+                    `Mother nature's wrath! Thunder and lightening!`,
+                    `We can avoid using the vacuum cleaner forever...right?`,
+                    `I hate the Fourth of July. Fireworks!`,
+                    `I can't stand conflict - dogs (and humans) barking really upsets me.`,
+                    `Pffft... I'm not afraid of anything.`
+                ]
+            },
+            {
+                question: `Question 5: You're on a walk. We all can't be perfect - what will make you forget your leash manners?`,
+                options: [` `,
+                    `Can't control the hunter in me. A squirrel or rabbit!`,
+                    `Smells! Smells! Smells!`,
+                    `New people and dogs! Can't fault friendly!`,
+                    `Bikes and cars. Slow down!`,
+                    `Leash manners? What's that?`
+                ]
+            },
+            {
+                question: `Question 6: The human is running the bath. What's your reaction?`,
+                options: [` `,
+                    `RUN!`,
+                    `Accept your fate...miserably.`,
+                    `I love baths! Bubbles!`,
+                    `Duck and cover! If we hide now, they can't catch us!`,
+                    `Wrestle your way to freedom`
+                ]
+            },
+            {
+                question: `Question 7: You have an audience. How will you impress?`,
+                options: [` `,
+                    `I'm a natural born athlete. I jump higher and run faster than anyone!`,
+                    `Memory. I know over 50 commands.`,
+                    `Cunning. Want to see me unlock this door?`,
+                    `I've been told I am very, very cute.`,
+                    `My sense of humor. I can always make a human laugh.`
+                ]
+            }
+        ]
+
+        $(document).ready(() => {
+            //Choice Headers
+            for (let i = 0; i < surveyQuestions.length; i++) {
+                let id = (i + 1);
+                let choiceOptions = $(`<select class=choice-options id=question-${id}>`);
+
+                for (let x = 0; x < surveyQuestions[i].options.length; x++) {
+                    let questionValue = 0;
+                    let index = x;
+                    choiceOptions.append($(`<option value='${index}'>`).text(surveyQuestions[i].options[x]));
+                    questionValue++;
+                }
+
+                let choices = $(`<div class=choices>`).append(choiceOptions);
+                $(`.question`).append(
+                    $(`<p class=question-head>`).text(surveyQuestions[i].question),
+                    $(choices),
+                );
+            }
+        });
+
+        $(".submit").on("click", (event) => {
+            event.preventDefault();
+
+            let userArray = [
+                parseInt($(`#question-1`).val()),
+                parseInt($(`#question-2`).val()),
+                parseInt($(`#question-3`).val()),
+                parseInt($(`#question-4`).val()),
+                parseInt($(`#question-5`).val()),
+                parseInt($(`#question-6`).val()),
+                parseInt($(`#question-7`).val()),
+            ]
+
+            finalSum = userArray.reduce((a, b) => a + b, 0);
+
+            const newFriend = {
+                // routeName: routeName,
+                name: $(`#username`).val().trim(),
+                age: $(`#age`).val().trim(),
+                // picture: ,
+                responses: userArray,
+                score: finalSum,
+            }
+
+            $.post("/api/friends", newFriend,(data) => {
+                console.log('im hitting');
+            });
+        });
+    </script>
+</body>
+
+</html>
